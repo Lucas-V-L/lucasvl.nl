@@ -1,0 +1,290 @@
+:root {
+	--background-color: #030b07;
+}
+
+* {
+	margin: 0;
+	box-sizing: border-box;
+}
+
+body {
+	font-family: Monospace;
+	height: 100%;
+	background-color: var(--background-color);
+}
+html {
+	height: 100%;
+	color: white;
+}
+
+img {
+	display: block;
+}
+
+#mouse {
+	pointer-events: none;
+	position: absolute;
+	top: -100%;
+	left: -100%;
+	width: auto;
+	height: auto;
+	background-color: white;
+	mix-blend-mode: difference;
+}
+
+#distort {
+	box-sizing: content-box;
+	width: 85%;
+	height: 81%;
+	position: fixed;
+	margin: -8vh 0 -8vh 0;
+	padding: 8vh 7% 8vh 7%;
+	top: 8.5%;
+	animation: blur 0.5s infinite;
+	filter: url(#trilight) grayscale(100%) brightness(75%) sepia(100%) saturate(7.5) blur(0.7px);
+}
+/* remove the svg filter for firefox due to horrible performance issues */
+@-moz-document url-prefix(){
+    #distort {
+        filter: grayscale(100%) brightness(75%) sepia(100%) saturate(7.5) blur(0.7px);
+	animation: blurff 0.5s infinite;
+    }
+}
+@keyframes blurff {
+        from {
+                filter: grayscale(100%) brightness(75%) sepia(100%) saturate(7.5) blur(0.7px);
+        }
+        to {
+                filter: grayscale(100%) brightness(75%) sepia(100%) saturate(7.5) blur(1px);
+        }
+}
+
+@keyframes blur {
+	from {
+		filter: url(#trilight) grayscale(100%) brightness(75%) sepia(100%) saturate(7.5) blur(0.7px);
+	}
+	to {
+		filter: url(#trilight) grayscale(100%) brightness(75%) sepia(100%) saturate(7.5) blur(1px);
+	}
+}
+#displayscreen {
+	pointer-events: none;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	animation: flicker 0.2s infinite, lines 0.2s infinite;
+	background-color: rgba(0, 0, 0, 0.1);
+	background-image: repeating-linear-gradient(#00000090, #00000090 2px, transparent 2px, transparent 4px);
+	background-repeat: repeat;
+}
+#displayscreen::after {
+	content: "";
+	width: 100%;
+	height: 10%;
+	background-image: linear-gradient(transparent, #00000090 50%, transparent 100%);
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-size: 100% 100%;
+	position: fixed;
+	animation: toptobottom linear 7s infinite;
+}
+#displayscreen::before {
+	content: "";
+	width: 100%;
+	height: 12%;
+	background-image: linear-gradient(transparent, #00000090 65%, transparent 100%);
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-size: 100% 100%;
+	position: fixed;
+	animation: 7s toptobottom linear 3.5s infinite;
+}
+
+@keyframes toptobottom {
+	from {
+		transform: translateY(0vh);
+	}
+	to {
+		transform: translateY(100vh);
+	}
+}
+
+@keyframes lines {
+	from {
+		translate: 0 -1px;
+	}
+	to {
+		translate: 0 1px;
+	}
+}
+#scrollbox {
+	width: 100%;
+	height: 100%;
+	position: relative;
+	overflow: auto;
+	padding: 10px;
+	padding-bottom: 2em;
+}
+::selection {
+	background-color: white;
+	color: var(--background-color);
+}
+.svgfilter {
+	top: -200%;
+	left: -200%;
+	position: absolute;
+	visibility: hidden;
+	width: 100%;
+	height: 100%;
+}
+
+#border {
+	pointer-events: none;
+	position: fixed;
+	width: 100%;
+	height: 100%;
+}
+
+@keyframes flicker {
+  5% {
+  opacity: 0.34769;
+  }
+  15% {
+  opacity: 0.90626;
+  }
+  30% {
+  opacity: 0.65583;
+  }
+  50% {
+  opacity: 0.96019;
+  }
+  55% {
+  opacity: 0.08594;
+  }
+  75% {
+  opacity: 0.37288;
+  }
+  80% {
+  opacity: 0.71428;
+  }
+  100% {
+  opacity: 0.24387;
+  }
+}
+
+#bootscreen {
+	padding: inherit;
+	background: var(--background-color);
+	width: calc(100% - 10px);
+	height: calc(100% - 10px);
+	top: -100%;
+	left: 10px;
+	overflow: hidden;
+	position: absolute;
+	animation: 10.5s step-end 1 forwards boot;
+}
+@keyframes boot {
+	0% {
+		top: 10px;
+	}
+	100% {
+		display: none;
+	}
+}
+#bootscreen > * {
+	padding: inherit;
+	display: inherit;
+	background: var(--background-color);
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	left: -100%;
+	top: 0;
+	animation: 1s step-start 1 forwards bootpages;
+}
+#boot-frame-1 {animation: 1s step-start 1 forwards 2s bootpages, 1s linear 1 forwards 2s fade-in;}
+#boot-frame-2 {animation-delay: 5s;}
+#boot-frame-3 {animation-delay: 6s;}
+#boot-frame-4 {animation-delay: 9.5s;}
+
+@keyframes bootpages {
+	to {
+                left: 0;
+        }
+}
+
+@keyframes fade-in {
+	from {
+		opacity: 0%;
+	} to {
+		opacity: 100%;
+	}
+}
+#boot-frame-3 > .imgcontainer > img {
+	display: inline;
+	padding-left: 5px;
+} .imgcontainer {
+	position: relative;
+	max-width: 100%;
+	overflow-x: hidden;
+}
+
+#bootscreen > * > p {
+	padding-bottom: 10px;
+}
+
+#boot-frame-3 > p {
+	animation: 1s step-start 1 forwards appear; 
+	visibility: hidden;
+	padding-bottom: 0;
+}
+@keyframes appear {
+	from {
+		visibility: hidden;
+	} to { 
+		visibility: visible;
+	}
+}
+
+#boot-frame-3 > p:nth-child(1) { animation-delay: 6s; }
+#boot-frame-3 > p:nth-child(2) { animation-delay: 6.1s; }
+#boot-frame-3 > p:nth-child(3) { animation-delay: 6.2s; }
+#boot-frame-3 > p:nth-child(4) { animation-delay: 6.3s; }
+#boot-frame-3 > p:nth-child(5) { animation-delay: 6.6s; }
+#boot-frame-3 > p:nth-child(6) { animation-delay: 6.7s; }
+#boot-frame-3 > p:nth-child(7) { animation-delay: 6.9s; }
+#boot-frame-3 > p:nth-child(8) { animation-delay: 7s; }
+#boot-frame-3 > p:nth-child(9) { animation-delay: 7.2s; }
+#boot-frame-3 > p:nth-child(10) { animation-delay: 7.3s; }
+#boot-frame-3 > p:nth-child(11) { animation-delay: 7.4s; }
+#boot-frame-3 > p:nth-child(12) { animation-delay: 7.5s; }
+#boot-frame-3 > p:nth-child(13) { animation-delay: 7.6s; }
+#boot-frame-3 > p:nth-child(14) { animation-delay: 7.7s; }
+#boot-frame-3 > p:nth-child(15) { animation-delay: 8s; }
+#boot-frame-3 > p:nth-child(16) { animation-delay: 8.1s; }
+#boot-frame-3 > p:nth-child(17) { animation-delay: 8.2s; }
+#boot-frame-3 > p:nth-child(18) { animation-delay: 8.2s; }
+#boot-frame-3 > p:nth-child(19) { animation-delay: 8.3s; }
+#boot-frame-3 > p:nth-child(20) { animation-delay: 8.4s; }
+#boot-frame-3 > p:nth-child(21) { animation-delay: 8.5s; }
+#boot-frame-3 > p:nth-child(22) { animation-delay: 8.8s; }
+
+
+#bootscreen #logo {
+	position: relative;
+	width: min(55%, 100vh);
+	height: auto;
+	float: left;
+}
+#bootscreen #energy {
+	position: relative;
+	width: min(25%, 40vh);
+	height: auto;
+	float: right;
+}
+#bootscreen #bootimgs {
+	min-height: 1px;
+	overflow: hidden;
+}
