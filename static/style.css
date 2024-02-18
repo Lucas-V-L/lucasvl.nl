@@ -1,0 +1,588 @@
+@font-face {
+	font-family: 'Web ToshibaSat 8x16';
+	font-style: normal;
+	font-weight: 400;
+	src: url("/static/web_toshibasat_8x16.woff") format('woff');
+}
+
+:root {
+        font-family: 'Web ToshibaSat 8x16';
+        font-size: 16px;
+	line-height: 1.3;
+	--background-color: #05140d;
+	--lineHeight: 1lh;
+	--space: calc(7vh - var(--lineHeight)) calc(6vw + 25px) calc(7vh + 5px) 6vw;
+	--screensaverDelay: 80s; /* plus 5 seconds so the logo doesnt start in the top left */
+}
+
+* {
+	margin: 0;
+	box-sizing: border-box;
+}
+
+body {
+	height: 100%;
+	background-color: var(--background-color);
+}
+html {
+	height: 100%;
+	color: white;
+}
+
+img {
+	display: block;
+}
+
+#mouse {
+	pointer-events: none;
+	position: fixed;
+	top: -100%;
+	left: -100%;
+	width: auto;
+	height: auto;
+	background-color: white;
+	mix-blend-mode: difference;
+}
+.blink.blink {
+	animation: 1s blink step-end infinite forwards;
+}
+@keyframes blink {
+	0% {
+		background-color: white;
+	} 
+	50% {
+		background-color: var(--background-color);
+	}
+	100% {
+		background-color: white;
+	}
+}
+
+#distort {
+	box-sizing: border-box;
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	animation: blur 0.5s infinite;
+	filter: url(#trilight) grayscale(100%) brightness(75%) sepia(100%) saturate(7.5) blur(0.7px);
+}
+@keyframes blurff {
+        from {
+                filter: grayscale(100%) brightness(75%) sepia(100%) saturate(7.5) blur(0.8px);
+        }
+        to {
+                filter: grayscale(100%) brightness(75%) sepia(100%) saturate(7.5) blur(1.05px);
+        }
+}
+
+@keyframes blur {
+	from {
+		filter: url(#trilight) grayscale(100%) brightness(75%) sepia(100%) saturate(7.5) blur(0.8px);
+	}
+	to {
+		filter: url(#trilight) grayscale(100%) brightness(75%) sepia(100%) saturate(7.5) blur(1.05px);
+	}
+}
+#displayscreen {
+	pointer-events: none;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	animation: flicker 0.2s infinite, lines 0.2s infinite;
+	background-color: rgba(0, 0, 0, 0.1);
+	background-image: repeating-linear-gradient(#00000090, #00000090 2px, transparent 2px, transparent 4px);
+	background-repeat: repeat;
+}
+#displayscreen::after {
+	content: "";
+	width: 100%;
+	height: 10%;
+	background-image: linear-gradient(transparent, #00000095 50%, transparent 100%);
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-size: 100% 100%;
+	position: fixed;
+	animation: toptobottom linear 7s infinite;
+}
+#displayscreen::before {
+	content: "";
+	width: 100%;
+	height: 12%;
+	background-image: linear-gradient(transparent, #00000095 65%, transparent 100%);
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-size: 100% 100%;
+	position: fixed;
+	animation: 7s toptobottom linear 3.5s infinite;
+}
+
+@keyframes toptobottom {
+	from {
+		transform: translateY(0vh);
+	}
+	to {
+		transform: translateY(100vh);
+	}
+}
+
+@keyframes lines {
+	from {
+		translate: 0 -1px;
+	}
+	to {
+		translate: 0 1px;
+	}
+}
+#scrollbox {
+	width: 100%;
+	height: 100%;
+	box-sizing: border-box;
+	border: solid transparent;
+	border-width: var(--space);
+	position: relative;
+	overflow: visible;
+	background: var(--background-color);
+	isolation: isolate;
+}
+::selection {
+	background-color: white;
+	color: var(--background-color);
+}
+.svgfilter {
+	top: -200%;
+	left: -200%;
+	position: absolute;
+	visibility: hidden;
+	width: 100%;
+	height: 100%;
+}
+
+#border {
+	pointer-events: none;
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	z-index: 200;
+}
+
+#stickynote::-webkit-scrollbar {
+	width: initial;
+}
+#stickynote::-webkit-scrollbar-track {
+	background: transparent;
+}
+#stickynote::-webkit-scrollbar-thumb {
+	background: black;
+        border-radius: 10000px;
+}
+
+#stickynote {
+	transform-origin: 100% 50%; 
+	font-family: Cursive; 
+	display: none; 
+	z-index: 100000; 
+	color: black; 
+	padding: 30px; 
+	overflow: auto; 
+	transform: rotateZ(5deg); 
+	width: min(350px, 80%); 
+	height: min(350px, 80%); 
+	position: fixed; 
+	bottom: 10%; 
+	right: 10%; 
+	background-clip: border-box;
+	backface-visibility: hidden;
+}
+
+@keyframes flicker {
+  5% {
+  opacity: 0.34769;
+  }
+  15% {
+  opacity: 0.90626;
+  }
+  30% {
+  opacity: 0.65583;
+  }
+  50% {
+  opacity: 0.96019;
+  }
+  55% {
+  opacity: 0.08594;
+  }
+  75% {
+  opacity: 0.37288;
+  }
+  80% {
+  opacity: 0.71428;
+  }
+  100% {
+  opacity: 0.24387;
+  }
+}
+
+#bootscreen {
+	background: var(--background-color);
+	width: 100%;
+	height: 100%;
+	top: -100%;
+	left: 0;
+	padding: var(--space);
+	border-top: var(--lineHeight) solid transparent;
+	overflow: hidden;
+	position: absolute;
+	animation: 10.5s step-end 1 forwards boot;
+}
+#bootscreen, #bootscreen * { cursor: none;}
+@keyframes boot {
+	0% {
+		top: 0;
+	}
+	100% {
+		display: none;
+	}
+}
+#bootscreen > * {
+	padding: inherit;
+	display: inherit;
+	background: var(--background-color);
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	left: -100%;
+	top: 0;
+	animation: 1s step-start 1 forwards bootpages;
+}
+#boot-frame-1 {animation: 1s step-start 1 forwards 2s bootpages, 1s linear 1 forwards 2s fade-in;}
+#boot-frame-2 {animation-delay: 5s;}
+#boot-frame-3 {animation-delay: 6s;}
+#boot-frame-4 {animation-delay: 9.5s;}
+
+@keyframes bootpages {
+	to {
+                left: 0;
+        }
+}
+
+@keyframes fade-in {
+	from {
+		opacity: 0%;
+	} to {
+		opacity: 100%;
+	}
+}
+#boot-frame-3 > .imgcontainer > img {
+	display: inline;
+	padding-left: 5px;
+} .imgcontainer {
+	position: relative;
+	max-width: 100%;
+	white-space: nowrap;
+	overflow-x: hidden;
+}
+
+#bootscreen > * > p {
+	padding-bottom: 10px;
+}
+
+#boot-frame-3 > p {
+	animation: 1s step-start 1 forwards appear; 
+	visibility: hidden;
+	padding-bottom: 0;
+}
+@keyframes appear {
+	from {
+		visibility: hidden;
+	} to { 
+		visibility: visible;
+	}
+}
+
+#boot-frame-3 > p:nth-child(1) { animation-delay: 6s; }
+#boot-frame-3 > p:nth-child(2) { animation-delay: 6.1s; }
+#boot-frame-3 > p:nth-child(3) { animation-delay: 6.2s; }
+#boot-frame-3 > p:nth-child(4) { animation-delay: 6.3s; }
+#boot-frame-3 > p:nth-child(5) { animation-delay: 6.6s; }
+#boot-frame-3 > p:nth-child(6) { animation-delay: 6.7s; }
+#boot-frame-3 > p:nth-child(7) { animation-delay: 6.9s; }
+#boot-frame-3 > p:nth-child(8) { animation-delay: 7s; }
+#boot-frame-3 > p:nth-child(9) { animation-delay: 7.2s; }
+#boot-frame-3 > p:nth-child(10) { animation-delay: 7.3s; }
+#boot-frame-3 > p:nth-child(11) { animation-delay: 7.4s; }
+#boot-frame-3 > p:nth-child(12) { animation-delay: 7.5s; }
+#boot-frame-3 > p:nth-child(13) { animation-delay: 7.6s; }
+#boot-frame-3 > p:nth-child(14) { animation-delay: 7.7s; }
+#boot-frame-3 > p:nth-child(15) { animation-delay: 8s; }
+#boot-frame-3 > p:nth-child(16) { animation-delay: 8.1s; }
+#boot-frame-3 > p:nth-child(17) { animation-delay: 8.2s; }
+#boot-frame-3 > p:nth-child(18) { animation-delay: 8.2s; }
+#boot-frame-3 > p:nth-child(19) { animation-delay: 8.3s; }
+#boot-frame-3 > p:nth-child(20) { animation-delay: 8.4s; }
+#boot-frame-3 > p:nth-child(21) { animation-delay: 8.5s; }
+#boot-frame-3 > p:nth-child(22) { animation-delay: 8.8s; }
+
+
+#bootscreen #logo {
+	position: relative;
+	width: min(55%, 100vh);
+	height: auto;
+	float: left;
+}
+#bootscreen #energy {
+	position: relative;
+	width: min(25%, 40vh);
+	height: auto;
+	float: right;
+}
+#bootscreen #bootimgs {
+	min-height: 1px;
+	overflow: hidden;
+}
+#pages { 
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	justify-content: normal;
+	align-items: normal;
+	align-content: normal;
+}
+.spacer {
+	display: block;
+	order: 0;
+}
+
+.page {
+	display: block;
+	order: 0;
+	padding-left: 1ch;
+	padding-right: 1ch;
+	overflow: auto;
+	outline: 1ch double white;
+	outline-offset: calc(1ch / 8);
+}
+
+.navbuttons, .spacer1 span {
+	position: relative;
+	z-index: 1;
+	outline: 1ch double white;
+	padding-left: 1ch;
+	padding-right: 1ch;
+	display: inline-block;
+	margin-left: 1ch;
+	margin-right: 1ch;
+	margin-bottom: calc(var(--lineHeight) * 0);
+	margin-top: calc(var(--lineHeight) * 1);
+	background-color: var(--background-color);
+}
+
+.radio:checked + label {
+	filter: invert(80%);
+}
+.navbuttons:hover {
+	filter: invert(1) !important;
+	outline: calc(1ch / 3) solid var(--background-color);
+	outline-offset: calc(1ch / 3);
+}
+.radio {
+	position: fixed;
+	left: -99999%;
+	top: -99999%;
+}
+
+#homepage, #aboutpage, #projectspage, #guhpage {
+	display: none;
+	width: 100%;
+	height: 100%;
+	position: relative;
+}
+
+#home:checked ~ #pages > #homepage {
+	display: block;
+}
+#about:checked ~ #pages > #aboutpage {
+        display: block;
+}
+#projects:checked ~ #pages > #projectspage {
+        display: block;
+}
+
+::-webkit-scrollbar {
+	width: 2ch;
+}
+::-webkit-scrollbar-track {
+	background: white;
+}
+::-webkit-scrollbar-thumb {
+	background: var(--background-color);
+	border: 0.5ch white solid;
+}
+::-webkit-scrollbar-thumb:hover {
+	background-color: white;
+	background-image: linear-gradient(45deg, var(--background-color) 25%, transparent 25%),
+				linear-gradient(-45deg, var(--background-color) 25%, transparent 25%),
+				linear-gradient(45deg, transparent 75%, var(--background-color) 75%),
+ 				linear-gradient(-45deg, transparent 75%, var(--background-color) 75%);
+	background-size: 5px 5px;
+	background-position: 0 0, 0 2.5px, 2.5px -2.5px, -2.5px 0px;
+}
+
+.button {
+	display: inline-block;
+}
+
+@media (hover: none) {
+	::-webkit-scrollbar {
+		display: none;
+	}
+	/* disable the bulge effect on mobile due to the fact we can't emulate the mouse for accurate clicks */
+	#distort {
+		filter: grayscale(100%) brightness(75%) sepia(100%) saturate(7.5) blur(0.7px);
+		animation: blurff 0.5s infinite;
+	}
+	.spacer2 {
+		display: none;
+	}
+	:root {
+		--space: 7.5vh 7.5vw 9.5vh 7.5vw;
+	}
+}
+/* remove the svg filter for firefox due to horrible performance issues */
+@-moz-document url-prefix(){
+	#distort {
+		filter: grayscale(100%) brightness(75%) sepia(100%) saturate(7.5) blur(0.7px);
+		animation: blurff 0.5s infinite;
+	}
+	.spacer2 {
+		display: none;
+	}
+	:root {
+		--space: 7.5vh 7.5vw 9.5vh 7.5vw;
+	}
+}
+
+
+.tearAway { 
+	animation: 4s ease-in-out tearAway forwards;
+}
+
+@keyframes tearAway {
+	from {
+		rotate: 1 1 0 0deg;
+	} to {
+		rotate: 1 1 0 450deg;
+		right: -100%;
+		bottom: 20%;
+		display: none;
+	}
+}
+
+#scrollbox:hover ~ #screensaver, #scrollbox:hover ~ #screensaver > #logo, #scrollbox:hover ~ #screensaver > #cornerhitcounter * {
+	animation: none;
+	visibility: hidden;
+}
+#scrollbox:not(:hover) ~ #mouse {
+	visibility: hidden;
+}
+
+#screensaver {
+	background-color: var(--background-color);
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	isolation: isolate;
+	pointer-events: none;
+	top: 0;
+	left: 0;
+	visibility: hidden;
+	border: solid transparent;
+	border-width: var(--space);
+	animation: 5s step-end screensaver forwards;
+	animation-delay: var(--screensaverDelay);
+}
+
+@keyframes screensaver {
+	from {
+		visibility: hidden;
+	} to {
+		visibility: visible;
+	}
+}
+
+#screensaver > #logo {
+	filter: invert(1);
+	width: min(294px, 75%);
+	height: auto;
+	padding-top: var(--lineHeight);
+	position: absolute;
+	animation: 3.4s Xslide infinite linear, 3s Yslide infinite linear;
+	animation-direction: alternate;
+	z-index: -1;
+	animation-delay: var(--screensaverDelay);
+}
+
+@keyframes Yslide {
+        from {
+                top: 0%;
+                translate: 0% 0%;
+        } to {
+                top: 100%;
+                translate: 0% -100%;
+        }
+}
+
+@keyframes Xslide {
+	from {
+		left: 0%;
+		transform: translateX(0%);
+	} to {
+		left: 100%;
+		transform: translateX(-100%);
+	}
+}
+@keyframes counter {
+	0% { transform: translateY(calc(0 * var(--lineHeight))); }
+	10% { transform: translateY(calc(-1 * var(--lineHeight))); }
+	20% { transform: translateY(calc(-2 * var(--lineHeight))); }
+	30% { transform: translateY(calc(-3 * var(--lineHeight))); }
+	40% { transform: translateY(calc(-4 * var(--lineHeight))); }
+	50% { transform: translateY(calc(-5 * var(--lineHeight))); }
+	60% { transform: translateY(calc(-6 * var(--lineHeight))); }
+	70% { transform: translateY(calc(-7 * var(--lineHeight))); }
+	80% { transform: translateY(calc(-8 * var(--lineHeight))); }
+	90% { transform: translateY(calc(-9 * var(--lineHeight))); }
+}
+#cornerhitcounter {
+	height: var(--lineHeight);
+	box-sizing: content-box;
+	float: right;
+	width: auto;
+	overflow: hidden;
+	padding-left: 1ch;
+	padding-right: 1ch;
+	border: 1ch double white;
+	margin-top: var(--lineHeight);
+	z-index: 1;
+	background-color: var(--background-color);
+}
+
+#cornerhitcounter > #numbers3 {
+	animation: 510s step-end counter infinite;
+}
+#cornerhitcounter > #numbers2 {
+        animation: 5100s step-end counter infinite;
+}
+#cornerhitcounter > #numbers1 {
+        animation: 51000s step-end counter infinite;
+}
+
+#cornerhitcounter * {
+        display: inline-block;
+        vertical-align: top;
+        animation-delay: var(--screensaverDelay) !important;
+}

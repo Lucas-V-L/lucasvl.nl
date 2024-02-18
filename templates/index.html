@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>LucasVL.nl</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="/static/prefixfree.min.js"></script>
+  </head>
+  <body>
+	<div id="clickblocker" style="display: none; width: 100%; height: 100%; position: fixed; z-index: 10000;"></div>
+	<img id="border" src="/static/img/screen_border_3.avif" onerror="this.onerror=null;this.src='/static/img/screen_border_3.webp';">
+	<div id="stickynote"><div onclick="enterPage()" style="cursor: pointer; margin: 0 10px 10px 10px; float: right; background-image: url('/static/img/close.svg'); width: 25px; height: 25px; background-size: 100% 100%;"></div>This is a very stylised website and may be difficult to read for those with vision impairments. For a more readable (but much less fun) version of this page, please click <a style="color: blue;" href="https://readable.lucasvl.nl/">here</a>. If you wish to continue, press the X on this note to turn on the monitor. It is best viewed on a larger screen, but some effects are disabled on mobile devices to make the stylised page work.</div>
+	<style id="jsstyles"></style>
+	<svg 	class="svgfilter"
+		preserveAspectRatio="none"
+		xmlns="http://www.w3.org/2000/svg">
+		<filter id="trilight" x="0%" y="0%" width="100%" height="100%">
+			<feImage xlink:href="/static/img/displacement.webp" result="lightMap" x="0%" y="0%" preserveAspectRatio="none" width="100%" height="100%"/>
+			<feDisplacementMap in2="lightMap" in="SourceGraphic" xChannelSelector="R" yChannelSelector="G" scale="50">
+			</feDisplacementMap>
+		</filter>
+	</svg>
+	<div id="distort"><div id="scrollbox" onmousemove="mouse(event)" onmouseup="mouse(event)">
+		<input type="radio" class="navbuttons radio" id="home" name="pages" value="home" checked/><label for="home" class="navbuttons">Home</label>
+		<input type="radio" class="navbuttons radio" id="about" name="pages" value="about"/><label for="about" class="navbuttons">About</label>
+		<input type="radio" class="navbuttons radio" id="projects" name="pages" value="projects"/><label for="projects" class="navbuttons">Projects</label>
+		<input type="radio" class="navbuttons radio" id="guh" name="pages" value="guh"/><label class="navbuttons">Guh</label>
+		<div id="pages">
+			<div class="spacer spacer1" style="visibility: hidden;"><br><span>Home</span> <span>About</span> <span>Projects</span> <span>Guh</span></div>
+			<div class="page" onscroll="scrollToNearestTextSize(this)" id="homepage">{{ homepage | safe }}<div class="pagespacer"></div></div>
+			<div class="page" onscroll="scrollToNearestTextSize(this)" id="aboutpage">{{ aboutpage | safe }}<div class="pagespacer"></div></div>
+			<div class="page" onscroll="scrollToNearestTextSize(this)" id="projectspage">{{ projectspage | safe }}<div class="pagespacer"></div></div>
+			<div class="spacer spacer2"><br></div>
+		</div>
+	</div>
+	
+	<div id="screensaver">
+		<img id="logo" src="/static/img/DVD_logo.svg">
+		<div id="cornerhitcounter">
+			Hits: 
+			<div id="numbers1">0<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9</div>
+			<div id="numbers2">0<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9</div>
+			<div id="numbers3">0<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9</div>
+		</div>
+	</div>
+
+	<div id="bootscreen">
+		<div id="boot-frame-1">
+			<div id="bootimgs">
+			<img src="/static/img/international_microfads.webp" id="logo">
+			<img src="/static/img/voidstar.webp" id="energy">
+			</div>
+			<p>InterBIOS Version 6.9 Revision 420 International Microfads, Inc.</p>
+			<p>Copyright 2069 LucasVL Corp. All Rights Reserved</p>
+			<p>CPU: 3,000 Crabs @ 0.1Hz</p>
+			<p>Total Memory: 69420KB (DDR42-2100)</p>
+			<p>Detected Boot Devices...<br>
+			IDE0: HeadCrash Labs Data Corruptor 21GB<br>
+			CD0: Awesome Mix 1998</p>
+			<p>Booting HDD0...</p>
+		</div>
+		<div id="boot-frame-2"></div>
+		<div id="boot-frame-3">
+			<div class="imgcontainer"><img src="/static/img/beans.webp"><img src="/static/img/beans.webp"><img src="/static/img/beans.webp"><img src="/static/img/beans.webp"><img src="/static/img/beans.webp"></div>
+			<p>Booting LVOS 8.67-rc5309</p>
+			<p>[ OK ] Waking up crabs (3000/3000)</p>
+			<p>[ OK ] Initialising flux capacitor</p>
+			<p>[ OK ] Taking my lunch break</p>
+			<p>[ INFO ] Overclocking Pentium 4 to 5GHz</p>
+			<p>[ WARNING ] System may be on fire</p>
+			<p>[ INFO ] Quick! Boss is looking, pretend to be busy!</p>
+			<p>[ OK ] Something about FUSE</p>
+			<p>[ INFO ] Flipping 5 random bits on the HDD</p>
+			<p>[ OK ] Closing cupholder</p>
+			<p>[ OK ] Re-enabling spacebar heating (DEPRECATED)</p> <!-- https://xkcd.com/1172 :) -->
+			<p>[ OK ] Applying static electricity to sensitive components</p>
+			<p>[ OK ] Enabling Rockwell Retro Encabulator</p>
+			<p>[ OK ] Resizing HDD0 from 2.5 in to 3.5in</p>
+			<p>[ INFO ] Remember to SMASH that like button</p>
+			<p>[ ERROR ] Index 69 out of bounds for array of length -3</p>
+			<p>[ OK ] I'm running out of ideas for what to put here</p>
+			<p>[ OK ] Refusing to load WiFi driver for no reason. Deal with it.</p>
+			<p>[ OK ] Preheating user interface</p>
+			<p>[ OK ] Adjusting air fuel mixture for cold weather</p>
+			<p>[ OK ] Attempting to start user interface</p>
+		</div>
+		<div id="boot-frame-4"></div>
+	</div>
+
+	<div id="mouse">&nbsp</div>
+	<div id="displayscreen"></div>
+	<script>
+		var content = document.getElementById("scrollbox");
+		var pages = document.getElementById("homepage");
+		document.getElementById("jsstyles").innerHTML = '#scrollbox, #scrollbox * {cursor: none;}\n* {animation-play-state: paused;}';
+		var vMouse = document.getElementById("mouse");
+		var leftOffset, topOffset, ht, wt, fontSize;
+		function changeOffsetAndBBox() {
+			var temp = document.createElement(content.nodeName);
+			temp.setAttribute("style", "margin:0; padding:0; font-family: inherit; font-size: inherit; position: absolute; white-space: nowrap;");
+			// do this BS to make it more precise, larger sample size or some fancy terms like that.
+			var text = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+			temp.innerHTML = text;
+			content.parentNode.appendChild(temp);
+			wt = parseFloat(temp.getBoundingClientRect()["width"])/parseFloat(text.length);
+			text = "<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>"
+			temp.innerHTML = text;
+			ht = parseFloat(temp.getBoundingClientRect()["height"])/(parseFloat(text.length)/4);
+			fontSize = parseFloat(window.getComputedStyle(temp, null).getPropertyValue('font-size'));
+			temp.parentNode.removeChild(temp);
+
+			document.querySelectorAll('.pagespacer')[0].style.height = "0px";
+			var pageheight = document.querySelectorAll('.page')[0].getBoundingClientRect()["height"]
+			document.querySelectorAll('.pagespacer').forEach(item => {
+				item.style.height = ht - ((parseInt(pageheight/ht)*ht + ht) - pageheight) + "px";
+			});
+
+			document.documentElement.style.setProperty('--lineHeight', ht + "px");
+
+			vMouse.style.left = "-100%";
+			vMouse.style.top = "-100%";
+
+			leftOffset = content.getBoundingClientRect()["left"] + parseFloat(window.getComputedStyle(content, null).getPropertyValue('border-left'));
+			topOffset = content.getBoundingClientRect()["top"] + parseFloat(window.getComputedStyle(content, null).getPropertyValue('border-top'));
+
+			console.log(topOffset);
+
+			document.querySelectorAll('.autoresize').forEach(item => {
+				var itemHeight = parseFloat(item.getBoundingClientRect()["height"]);
+				var itemWidth = parseFloat(item.getBoundingClientRect()["width"]);
+				item.style.marginBottom = (parseInt(itemHeight / ht)*ht - itemHeight + ht) + "px";
+			});
+		}
+
+		window.onresize = changeOffsetAndBBox;
+		window.onload = changeOffsetAndBBox;
+
+		function mouse(event) {
+			vMouse.style.top = ((parseInt((event.pageY - topOffset) / ht) * ht) + topOffset) + "px";
+			vMouse.style.left = ((parseInt((event.pageX - leftOffset) / wt) * wt) + leftOffset) + "px";
+		};
+
+		function mouseBlink() {
+			vMouse.classList.add("blink");
+		}
+		function stopMouseBlink() {
+                        vMouse.classList.remove("blink");
+                }
+
+		document.querySelectorAll('.navbuttons, a, input, button, select, textarea, label').forEach(item => {
+			item.onmouseover = mouseBlink;
+			item.onmouseout = stopMouseBlink;
+		});
+
+		document.getElementById("displayscreen").style.visibility = "hidden";
+		document.getElementById("clickblocker").style.display = "block";
+		document.querySelectorAll('*').forEach(item => {
+			item.style.animationPlayState = "paused";
+		});
+
+		var note = document.getElementById("stickynote");
+
+		function enterPage() {
+			note.classList.add("tearAway");
+			document.querySelectorAll('*').forEach(item => {
+                        	item.style.animationPlayState = "";
+                	});
+			document.getElementById("clickblocker").style.display = "none";
+			document.getElementById("displayscreen").style.visibility = "visible";
+		}
+
+		note.style.backgroundImage = "url('/static/img/stickynote.webp')"; note.style.backgroundSize = "100% 100%";
+		note.style.display = "block";
+
+		function scrollToNearestTextSize(ele) {
+			vMouse.style.left = "-100%";
+			vMouse.style.top = "-100%";
+			setTimeout(function(){
+				ele.scrollTop = parseInt((ele.scrollTop / ht) + 0.5) * ht;	
+			}, 500);
+		}
+	</script>
+	</div>
+  </body>
+</html>
