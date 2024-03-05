@@ -1,6 +1,9 @@
 from flask import Flask, render_template, request, abort
 import re
 app = Flask(__name__)
+app.config.update(\
+        TEMPLATES_AUTO_RELOAD=True\
+)
 
 from os import listdir
 from os.path import isfile, join, getmtime
@@ -58,4 +61,4 @@ def projectviewer(project):
     abort(404)
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0")
+    app.run(debug=True)
