@@ -734,3 +734,28 @@ ul {
 	padding-left: 5ch;
 	list-style-type: square;
 }
+
+table {
+	table-layout: fixed;
+	width: 100%;
+	border-collapse: collapse;
+	margin-top: calc(var(--lineHeight) / 2);
+	margin-bottom: calc(var(--lineHeight) / 2);
+}
+
+th, td {
+	outline: 1ch double white;
+	outline-offset: -1ch;
+	vertical-align:top;
+	text-align: start;
+	padding: calc(var(--lineHeight) / 2) 2ch;
+}
+
+th.contactMethod {
+	width: 32ch;
+}
+@media (max-width: 670px) {
+	th.contactMethod {
+		width: 16ch;
+	}
+}
