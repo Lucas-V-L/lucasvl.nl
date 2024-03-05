@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+
+<style>
+	#visual { 
+		display: grid;
+		grid-auto-flow: column;
+		column-gap: min(5px, 1vw);
+		flex-grow: 1;
+		margin-top: 1ch;
+	}
+	#visual div {
+		background-color: white;
+		transition: transform 0.05s;
+		transform-origin: bottom;
+	}
+
+	#mediaPlayer {
+		height: 100%;
+		width: 100%;
+		display: flex;
+		padding-bottom: 1ch;
+		flex-direction: column;
+	}
+
+	#controlsAndCover {
+		display: flex;
+		position: relative;
+		height: 45%;
+		min-height: 200px;
+		border-bottom: 1ch double white;
+		padding-bottom: 1ch;
+		margin-left: -1ch;
+		margin-right: -1ch;
+		padding-left: 1ch;
+		padding-right: 1ch;
+	}
+	#controlsAndCover #controls {
+		padding-top: var(--lineHeight);
+		overflow: auto;
+		border-right: 1ch double white;
+		margin-right: 1ch;
+		margin-bottom: -1ch;
+	}
+	#coverArt {
+		padding-top: 1ch;
+		aspect-ratio: 1/1; 
+		height: calc(min(100%, 25vw) - 1ch); 
+		position: relative;
+	}
+
+	.audioControls {
+		margin-bottom: var(--lineHeight);
+		margin-left: 1ch;
+		margin-right: 2ch;
+		padding-left: 1ch;
+		padding-right: 1ch;
+		outline: 1ch white double;
+		display: inline-block;
+		max-width: 100%;
+	}
+
+	.audioControls:hover {
+		filter: invert(1);
+		background-color: black;
+		outline: 0.333333333ch black solid;
+		outline-offset: 0.333333333ch;
+	}
+
+	/*********** Baseline, reset styles ***********/
+	input[type="range"] {
+	  -webkit-appearance: none;
+	  appearance: none;
+	  overflow: hidden;
+	  font-family: inherit; /* no clue why but for some reason it doesnt inherit font size and fucks with the ch unit */
+	  font-size: inherit;
+	  background: transparent;
+	  cursor: pointer;
+	  padding-right: 1ch;
+	  width: min(22ch, 100%); /* should be amount of steps plus slider width */
+	}
+
+	/* Removes default focus */
+	input[type="range"]:focus {
+	  outline: none;
+	}
+
+	/******** Chrome, Safari, Opera and Edge Chromium styles ********/
+	/* slider track */
+	input[type="range"]::-webkit-slider-runnable-track {
+	  background-color: darkgray;
+	  border-radius: 0px;
+	  height: var(--lineHeight);
+	}
+
+	/* slider thumb */
+	input[type="range"]::-webkit-slider-thumb {
+	  --background-color: black;
+	  -webkit-appearance: none; /* Override default look */
+	  appearance: none;
+	  margin-top: 0px; /* Centers thumb on the track */
+	  background-color: white;
+	  background-image: linear-gradient(45deg, var(--background-color) 25%, transparent 25%),
+                                linear-gradient(-45deg, var(--background-color) 25%, transparent 25%),
+                                linear-gradient(45deg, transparent 75%, var(--background-color) 75%),
+                                linear-gradient(-45deg, transparent 75%, var(--background-color) 75%);
+	  background-size: 5px 5px;
+          background-position: 0 0, 0 2.5px, 2.5px -2.5px, -2.5px 0px;
+	  border-radius: 0px;
+	  border-width: 0px;
+	  height: var(--lineHeight);
+	  width: 2ch;
+	  box-shadow: -200px 0 0 200px white;
+	}
+/*
+	input[type="range"]:focus::-webkit-slider-thumb {
+	  outline: 0.5ch solid white;
+	  outline-offset: 0.5ch;
+	}
+*/
+	/*********** Firefox styles ***********/
+	/* slider track */
+	input[type="range"]::-moz-range-track {
+	  background-color: darkgray;
+	  border-radius: 0px;
+	  height: var(--lineHeight);
+	}
+
+	/* slider thumb */
+	input[type="range"]::-moz-range-thumb {
+	  background-color: white;
+	  border: none; /*Removes extra border that FF applies*/
+	  border-radius: 0px;
+	  height: var(--lineHeight);
+	  width: 2ch;
+	}
+/*
+	input[type="range"]:focus::-moz-range-thumb{
+	  outline: 0.5ch solid white;
+	  outline-offset: 0.5ch;
+	}
+*/
+</style>
+
+<div style="display: none;" id="mediaPlayer">
+	<div id="controlsAndCover">
+		<div id="controls" style="flex-grow: 1;">
+			<div class="audioControls blinkCursor" onclick="playOrPause()">Play<wbr/>/<wbr/>Stop</div><br/>
+			<div id="audioInfo">
+				Deez Nutz by Ligma<br>
+				From the album "UpDog"
+			</div>
+			<input type="range" id="volume-slider" min="0" max="20" value="20">
+		</div>	
+		<div id="coverArt">
+			<img src="https://fakeimg.pl/512x512" style="position: absolute; height: 100%; width: 100%;"/>
+		</div>
+	</div>
+
+	<div id="visual" style="border: white 5px inset; flex-grow: 1; display: grid;">
+	</div>
+</div>
+
+<audio controls id="audioElem">
+  <source src="music.lucasvl.nl/stream.opus">
+</audio>
+
+<script>
+	var haltEQ;
+	let audio1 = new Audio();
+	audio1.src = "music.lucasvl.nl/stream.opus";
+	document.getElementById("audioElem").remove();
+	var visual = document.getElementById("visual");
+	document.getElementById("mediaPlayer").style.display = "flex";
+	var analyser, playing=false;
+	function playAndVisualise() {
+		haltEQ = false;
+		const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+		let audioSource = null;
+		audio1.play();
+		try {
+			audioSource = audioCtx.createMediaElementSource(audio1);
+			analyser = audioCtx.createAnalyser();
+			audioSource.connect(analyser);
+			analyser.connect(audioCtx.destination);
+			analyser.fftSize = 64;
+			analyser.minDecibels = -90;
+			analyser.maxDecibels = -20;
+		} catch(e) {}
+
+		const bufferLength = analyser.frequencyBinCount;
+		const dataArray = new Uint8Array(bufferLength);
+		
+		visual.innerHTML = "<div></div>".repeat(bufferLength);
+		const divs = visual.getElementsByTagName("div");
+		
+		var animateEQ = setInterval(() => {
+			analyser.getByteFrequencyData(dataArray);
+			var mult = 1;
+			var index;
+			for (let i = 0; i < bufferLength; i++) {
+				if(mult > 0) { index = i/2; }
+				else { index = bufferLength - ((i + 1) / 2); }
+				var height = (dataArray[bufferLength - 1 - i])/256;
+				divs[index].style.transform = "scaleY(" + height + ")";
+				mult *= -1;
+			}
+			if(haltEQ) { clearInterval(animateEQ); }
+		}, 70);
+	}
+	function pause() {
+		audio1.pause();
+		haltEQ = true;
+	}
+
+	const volumeSlider = document.querySelector('#volume-slider');
+	volumeSlider.addEventListener('input', function() {
+		audio1.volume = volumeSlider.value / 20;
+	});
+
+	function playOrPause() {
+		if(!playing) { playing=true; playAndVisualise(); }
+		else { playing=false; pause(); }
+	}
+</script>

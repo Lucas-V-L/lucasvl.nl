@@ -7,12 +7,14 @@
 
 :root {
         font-family: 'Web ToshibaSat 8x16';
-        font-size: 16px;
+        font-size: 105%;
 	line-height: 1.3;
-	--background-color: #05140d;
+	--background-color: #181818;
 	--lineHeight: 1lh;
 	--space: calc(7vh - var(--lineHeight)) calc(6vw + 25px) calc(7vh + 5px) 6vw;
-	--screensaverDelay: 80s; /* plus 5 seconds so the logo doesnt start in the top left */
+	--screensaverDelay: 95s; /* plus 5 seconds so the logo doesnt start in the top left */
+	--bloom: 3.5px;
+	--blur: 0.75px;
 }
 
 * {
@@ -42,6 +44,7 @@ img {
 	height: auto;
 	background-color: white;
 	mix-blend-mode: difference;
+	--isTouchScreen: 0;
 }
 .blink.blink {
 	animation: 1s blink step-end infinite forwards;
@@ -63,26 +66,28 @@ img {
 	width: 100%;
 	height: 100%;
 	position: fixed;
-	animation: blur 0.5s infinite;
-	filter: url(#trilight) grayscale(100%) brightness(75%) sepia(100%) saturate(7.5) blur(0.7px);
+	/*animation: blur 0.5s infinite;*/
+	filter: url(#trilight) grayscale(100%) brightness(75%) sepia(100%) saturate(7.5) blur(var(--blur));
 }
+/*
 @keyframes blurff {
         from {
-                filter: grayscale(100%) brightness(75%) sepia(100%) saturate(7.5) blur(0.8px);
+                filter: grayscale(100%) brightness(75%) sepia(100%) saturate(7.5) blur(var(--blur));
         }
         to {
-                filter: grayscale(100%) brightness(75%) sepia(100%) saturate(7.5) blur(1.05px);
+                filter: grayscale(100%) brightness(75%) sepia(100%) saturate(7.5) blur(var(--blur));
         }
 }
 
 @keyframes blur {
 	from {
-		filter: url(#trilight) grayscale(100%) brightness(75%) sepia(100%) saturate(7.5) blur(0.8px);
+		filter: url(#trilight) grayscale(100%) brightness(75%) sepia(100%) saturate(7.5) blur(var(--blur));
 	}
 	to {
-		filter: url(#trilight) grayscale(100%) brightness(75%) sepia(100%) saturate(7.5) blur(1.05px);
+		filter: url(#trilight) grayscale(100%) brightness(75%) sepia(100%) saturate(7.5) blur(var(--blur));
 	}
 }
+*/
 #displayscreen {
 	pointer-events: none;
 	position: absolute;
@@ -135,6 +140,16 @@ img {
 		translate: 0 1px;
 	}
 }
+a { 
+	color: white;
+	text-decoration: underline;
+	animation: linkblink 0.7s ease-in-out alternate infinite;
+}
+@keyframes linkblink {
+	from { color: white; } 
+	to { color: #757575; }
+}
+
 #scrollbox {
 	width: 100%;
 	height: 100%;
@@ -145,6 +160,11 @@ img {
 	overflow: visible;
 	background: var(--background-color);
 	isolation: isolate;
+}
+
+/* bloom effect */ 
+.page, .navbuttons, #bootscreen > * > *, #mouse {
+	filter: drop-shadow(0 0 var(--bloom) white);
 }
 ::selection {
 	background-color: white;
@@ -174,7 +194,7 @@ img {
 	background: transparent;
 }
 #stickynote::-webkit-scrollbar-thumb {
-	background: black;
+	background: var(--background-color);
         border-radius: 10000px;
 }
 
@@ -194,6 +214,11 @@ img {
 	right: 10%; 
 	background-clip: border-box;
 	backface-visibility: hidden;
+}
+
+#stickynote a {
+	animation: none;
+	color: darkblue;
 }
 
 @keyframes flicker {
@@ -255,7 +280,7 @@ img {
 	top: 0;
 	animation: 1s step-start 1 forwards bootpages;
 }
-#boot-frame-1 {animation: 1s step-start 1 forwards 2s bootpages, 1s linear 1 forwards 2s fade-in;}
+#boot-frame-1 {animation: bootpages 1s step-start 0.5s 1 forwards, fade-in 5s linear 0.5s 1 forwards, startUp 0.75s linear 0.5s 1 forwards;}
 #boot-frame-2 {animation-delay: 5s;}
 #boot-frame-3 {animation-delay: 6s;}
 #boot-frame-4 {animation-delay: 9.5s;}
@@ -273,9 +298,23 @@ img {
 		opacity: 100%;
 	}
 }
+@keyframes startUp {
+	0% {
+		transform: skew(-50deg) scale(0.85, 0.01);
+	}
+	85% { 
+		transform: skew(50deg) scale(0.95, 0.25);
+	}
+	100% {
+		transform: skew(0deg) scale(1, 1);
+	}
+}
 #boot-frame-3 > .imgcontainer > img {
 	display: inline;
 	padding-left: 5px;
+	padding-right: 5px;
+	width: min(100px, 20vw);
+	filter: none;
 } .imgcontainer {
 	position: relative;
 	max-width: 100%;
@@ -340,6 +379,10 @@ img {
 	min-height: 1px;
 	overflow: hidden;
 }
+#bootscreen > #bootimgs > img {
+	filter: none !important;
+}
+
 #pages { 
 	width: 100%;
 	height: 100%;
@@ -367,6 +410,14 @@ img {
 	outline-offset: calc(1ch / 8);
 }
 
+.banner {
+	width: 100%;
+	position: relative;
+}
+.banner > img {
+	width: 100%;
+}
+
 .navbuttons, .spacer1 span {
 	position: relative;
 	z-index: 1;
@@ -376,18 +427,22 @@ img {
 	display: inline-block;
 	margin-left: 1ch;
 	margin-right: 1ch;
-	margin-bottom: calc(var(--lineHeight) * 0);
+	margin-bottom: 0;
 	margin-top: calc(var(--lineHeight) * 1);
-	background-color: var(--background-color);
 }
 
-.radio:checked + label {
-	filter: invert(80%);
+.radio:checked + .navbuttons {
+	filter: invert(0.4) drop-shadow(0 0 var(--bloom) darkgray);
 }
+.radio:checked + .projectselector > div {
+        transform: translateX(1ch);
+}
+
 .navbuttons:hover {
-	filter: invert(1) !important;
-	outline: calc(1ch / 3) solid var(--background-color);
-	outline-offset: calc(1ch / 3);
+	filter: invert(1) drop-shadow(0 0 var(--bloom) white) !important;
+	outline: calc(1ch / 3) solid var(--background-color) !important;
+	background-color: var(--background-color) !important;
+	outline-offset: calc(1ch / 3) !important;
 }
 .radio {
 	position: fixed;
@@ -395,7 +450,7 @@ img {
 	top: -99999%;
 }
 
-#homepage, #aboutpage, #projectspage, #guhpage {
+#homepage, #aboutpage, #projectspage, #radiopage {
 	display: none;
 	width: 100%;
 	height: 100%;
@@ -407,6 +462,9 @@ img {
 }
 #about:checked ~ #pages > #aboutpage {
         display: block;
+}
+#radiopg:checked ~ #pages > #radiopage {
+	display: block;
 }
 #projects:checked ~ #pages > #projectspage {
         display: block;
@@ -442,7 +500,7 @@ img {
 	}
 	/* disable the bulge effect on mobile due to the fact we can't emulate the mouse for accurate clicks */
 	#distort {
-		filter: grayscale(100%) brightness(75%) sepia(100%) saturate(7.5) blur(0.7px);
+		filter: grayscale(100%) brightness(75%) sepia(100%) saturate(7.5) blur(var(--blur));
 		animation: blurff 0.5s infinite;
 	}
 	.spacer2 {
@@ -450,12 +508,16 @@ img {
 	}
 	:root {
 		--space: 7.5vh 7.5vw 9.5vh 7.5vw;
+	}
+	#mouse {
+		display: none;
+		--isTouchScreen: 1;
 	}
 }
 /* remove the svg filter for firefox due to horrible performance issues */
 @-moz-document url-prefix(){
 	#distort {
-		filter: grayscale(100%) brightness(75%) sepia(100%) saturate(7.5) blur(0.7px);
+		filter: grayscale(100%) brightness(75%) sepia(100%) saturate(7.5) blur(var(--blur));
 		animation: blurff 0.5s infinite;
 	}
 	.spacer2 {
@@ -466,19 +528,22 @@ img {
 	}
 }
 
-
 .tearAway { 
-	animation: 4s ease-in-out tearAway forwards;
+	animation: 2s ease-in tearAway forwards;
 }
 
 @keyframes tearAway {
-	from {
+	0% {
 		rotate: 1 1 0 0deg;
-	} to {
-		rotate: 1 1 0 450deg;
+	} 50% {
+		rotate: 1 1 0 75deg;
+		right: -5%;
+	} 100% {
+		rotate: 1 1 0 180deg;
 		right: -100%;
-		bottom: 20%;
+		bottom: -20%;
 		display: none;
+		visibility: hidden;
 	}
 }
 
@@ -515,14 +580,15 @@ img {
 }
 
 #screensaver > #logo {
-	filter: invert(1);
+	filter: invert(1) drop-shadow(0 0 var(--bloom) white);
 	width: min(294px, 75%);
 	height: auto;
-	padding-top: var(--lineHeight);
 	position: absolute;
 	animation: 3.4s Xslide infinite linear, 3s Yslide infinite linear;
 	animation-direction: alternate;
 	z-index: -1;
+	padding-top: 10px;
+	padding-bottom: 10px;
 	animation-delay: var(--screensaverDelay);
 }
 
@@ -538,10 +604,10 @@ img {
 
 @keyframes Xslide {
 	from {
-		left: 0%;
+		left: -10px;
 		transform: translateX(0%);
 	} to {
-		left: 100%;
+		left: calc(100% + 10px);
 		transform: translateX(-100%);
 	}
 }
@@ -569,6 +635,7 @@ img {
 	margin-top: var(--lineHeight);
 	z-index: 1;
 	background-color: var(--background-color);
+	filter: drop-shadow(0 0 var(--bloom) white);
 }
 
 #cornerhitcounter > #numbers3 {
@@ -584,5 +651,86 @@ img {
 #cornerhitcounter * {
         display: inline-block;
         vertical-align: top;
+	filter: drop-shadow(0 0 var(--bloom) white);
         animation-delay: var(--screensaverDelay) !important;
+}
+
+#projectspage {
+	isolation: isolate;
+	--buttonspace: 20ch;
+}
+@media (max-width: 500px) {
+	#projectspage {
+		--buttonspace: 10ch;
+	}
+}
+
+/* WARNING: the following CSS may cause severe hair loss, please dont touch it. I wrote it around midnight, have no idea, how it works, but distinctly remember nearly crying when it finally worked. thankfully (hopefully) i wrote it in such a way that i will never EVER E V E R have to touch it again. if that proves false the entire website is going down */
+.projectspage-page {
+	display: none;
+	isolation: isolate;
+	width: 100%;
+	height: 100%;
+	margin-top: -100vh;
+	position: sticky;
+	float: right;
+	left: 0;
+	top: 0;
+	padding-left: var(--buttonspace);
+}
+
+.projectspage-page > div {
+	outline: 1ch double white;
+	height: 100%;
+	width: calc(calc(100% - var(--buttonspace)) + 1ch);
+	padding-left: 1ch;
+	padding-right: 1ch;
+	position: absolute;
+	top: 0;
+	overflow: auto;
+	isolation: isolate;
+}
+/* end hair loss */
+
+.projectselector {
+	position: absolute;
+	z-index: 1;
+	display: block;
+	box-sizing: border-box;
+	width: calc(var(--buttonspace) - 3ch);
+	padding: var(--lineHeight) 0ch 0 0ch;
+}
+.projectselector > div {
+	box-sizing: border-box;
+	outline: 1ch double white;
+	padding-left: 1ch;
+	padding-right: 1ch;
+	overflow: hidden;
+}
+.projectselector:hover > div {
+	transform: translateX(-1ch);
+}
+
+.projectselector > div > div {
+	position: relative;
+	width: max-content;
+}
+.marquee {
+	animation: marquee 5s linear infinite;
+}
+@keyframes marquee {
+	from {
+		left: 110%;
+		transform: translateX(1ch);
+	}
+	to {
+		left: -1ch;
+		transform: translateX(-100%);
+	}
+}
+
+
+ul {
+	padding-left: 5ch;
+	list-style-type: square;
 }

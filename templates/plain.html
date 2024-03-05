@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>LucasVL.nl</title>
+    <link rel="stylesheet" href="/static/min.css">
+    <link rel="icon" type="image/x-icon" href="/static/img/favicon.png">
+    <script src="/static/prefixfree.min.js"></script>
+  </head>
+  <body>
+	  <input type="checkbox" name="themeswitch" id="themeswitchbox" onchange="saveTheme()"><label for="themeswitchbox" class="themeswitch"><div class="themeslider"></div></label>
+	  <script>
+		  var startindex = document.cookie.search("lightMode=") + 10;
+		  document.getElementById("themeswitchbox").checked = "true" === document.cookie.substring(startindex).split(";")[0];
+		  function saveTheme() {
+			const d = new Date();
+			d.setTime(d.getTime() + (365*24*60*60*1000));
+			document.cookie = "lightMode=" + document.getElementById("themeswitchbox").checked + "; expires=" + d.toUTCString();
+			console.log(document.cookie + d.toUTCString());
+		  }
+	  </script>
+	  <div class="themewrapper">
+		<input type="checkbox" name="navbutton" id="navcheck">
+		<label for="navcheck" class="navbutton"><img src="/static/img/arrow-left.svg"></label>
+		<nav>
+			<h1>&nbspNAV - {{ pageName }}</h1>
+			<ul>
+				<li><a href="/plain">Home</a></li>
+				<li><a href="/plain/about">About</a></li>
+				<li>Projects
+					<ol>
+						{% for project in projects %}
+							<li><a href="/projects/{{project}}">{{ project[:-5] }}</a></li>
+						{% endfor %}
+					</ol>
+				</li>
+			</ul>
+		</nav>
+		<main>
+	  		{{ content | safe }}
+		</main>
+	  </div>
+  </body>
+</html>
