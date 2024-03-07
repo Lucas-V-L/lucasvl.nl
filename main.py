@@ -1,5 +1,6 @@
-from flask import Flask, render_template, request, abort
+from flask import Flask, render_template, request, abort, Response
 import re
+from nonce import NonceGenerator as ng
 app = Flask(__name__)
 app.config.update(\
         TEMPLATES_AUTO_RELOAD=True\
@@ -23,7 +24,8 @@ valid_ID = re.compile("/^[^a-z]+|[^\w:.-]+/gi")
 
 @app.route("/")
 def home():
-    return render_template("index.html",\
+    nonces = ng() 
+    rsp = Response(render_template("index.html",\
             homepage=render_template("pages/homepage.html"),\
             aboutpage=render_template("pages/aboutpage.html"),\
             radiopage=render_template("pages/Radio.html"),\
@@ -31,33 +33,48 @@ def home():
             re=re,\
             valid_ID=valid_ID,\
             projects=getProjects(),\
-            tools=getTools())
+            tools=getTools(),\
+            nonceGenerator = nonces))
+    rsp.headers["Content-Security-Policy"] = nonces.get_header()
+    return rsp
 
 @app.route("/plain")
 def plain_home():
-    return render_template("plain.html",\
+    nonces = ng()
+    rsp = Response(render_template("plain.html",\
             content=render_template("pages/homepage.html"),\
             pageName="Home",\
             projects=getProjects(),\
-            tools=getTools())
+            tools=getTools(),\
+            nonceGenerator = nonces))
+    rsp.headers["Content-Security-Policy"] = nonces.get_header()
+    return rsp
 
 @app.route("/plain/about")
 def plain_about():
-    return render_template("plain.html",\
+    nonces = ng()
+    rsp = Response(render_template("plain.html",\
             content=render_template("pages/aboutpage.html"),\
             pageName="About",\
             projects=getProjects(),\
-            tools=getTools())
+            tools=getTools(),\
+            nonceGenerator = nonces))
+    rsp.headers["Content-Security-Policy"] = nonces.get_header()
+    return rsp
 
 @app.route("/projects/<project>")
 def projectviewer(project):
     if project in getProjects():
-        return render_template("plain.html",\
+        nonces = ng()
+        rsp = Response(render_template("plain.html",\
                 content=render_template(join("pages/projects", project)),\
                 re=re,\
                 valid_ID=valid_ID,\
                 projects=getProjects(),\
-                tools=getTools())
+                tools=getTools(),\
+                nonceGenerator = nonces))
+        rsp.headers["Content-Security-Policy"] = nonces.get_header()
+        return rsp
     abort(404)
 
 if __name__ == "__main__":
