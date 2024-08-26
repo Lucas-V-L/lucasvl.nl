@@ -146,8 +146,8 @@
 		<div id="controls" style="flex-grow: 1;">
 			<div class="audioControls blinkCursor" onclick="playOrPause()">Play<wbr/>/<wbr/>Stop</div><br/>
 			<div id="audioInfo">
-				Deez Nutz by Ligma<br>
-				From the album "UpDog"
+				Coming Soon!<br>
+				The radio is still a work in progress...
 			</div>
 			<input type="range" id="volume-slider" min="0" max="20" value="20">
 		</div>	
@@ -161,13 +161,13 @@
 </div>
 
 <audio controls id="audioElem">
-  <source src="music.lucasvl.nl/stream.opus">
+  <source src="/static/Ricky.opus">
 </audio>
 
 <script>
 	var haltEQ;
 	let audio1 = new Audio();
-	audio1.src = "music.lucasvl.nl/stream.opus";
+	audio1.src = "/static/Ricky.opus";
 	document.getElementById("audioElem").remove();
 	var visual = document.getElementById("visual");
 	document.getElementById("mediaPlayer").style.display = "flex";
