@@ -8,6 +8,18 @@
     <link rel="stylesheet" href="/static/min.css">
     <link rel="icon" type="image/x-icon" href="/static/img/favicon.png">
     <script src="/static/prefixfree.min.js"></script>
+    <style>
+        .regularimage {
+            filter: unset;
+	}
+	.regularimage img {
+	    max-width: 100%;
+	    height: auto;
+	}
+	.regularimage:after {
+	    content: "";
+	}
+    </style>
   </head>
   <body>
 	  <input type="checkbox" name="themeswitch" id="themeswitchbox" onchange="saveTheme()"><label for="themeswitchbox" class="themeswitch"><div class="themeslider"></div></label>
